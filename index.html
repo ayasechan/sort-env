@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sort env path</title>
+  </head>
+  <body>
+    <div class="header"></div>
+    <div class="content">
+      <div>
+        <p>请输入环境变量</p>
+        <textarea name="env-text" id="" cols="30" rows="10"></textarea>
+      </div>
+      <div>
+        <div>
+          <label>
+            win
+            <input checked type="radio" name="system" value="win" />
+          </label>
+          <label>
+            linux
+            <input type="radio" name="system" value="linux"
+          /></label>
+        </div>
+        <button id="sort">排序</button>
+        <button id="copy">复制文本</button>
+      </div>
+      <pre id="viewer"></pre>
+    </div>
+    <div class="footer"></div>
+  </body>
+
+  <link rel="stylesheet" href="./index.css" />
+  <script>
+    (() => {
+      let spliter = "";
+      const paths = [];
+      const main = async () => {
+        qs("#sort").onclick = (_) => {
+          const sys = qs('input[name="system"]:checked').value;
+          if (sys === "win") {
+            spliter = ";";
+          } else {
+            spliter = ":";
+          }
+
+          paths.length = 0;
+          for (const frag of qs("textarea").value.split(spliter)) {
+            const i = frag.trim();
+            if (i.length) {
+              paths.push(i);
+            }
+          }
+          paths.sort((a, b) => {
+            return a.localeCompare(b);
+          });
+          qs("#viewer").textContent = paths.join("\n");
+        };
+        qs("#copy").onclick = (_) => {
+          const text = paths.join(spliter);
+          navigator.clipboard.writeText(text);
+        };
+      };
+
+      const qs = (sel) => {
+        return document.querySelector(sel);
+      };
+
+      main();
+    })();
+  </script>
+</html>
